@@ -26,7 +26,7 @@ def replace_missing_values(df, column, value, method="mean"):
         return median_df
     
 def cov_analysis(df):
-    print(df.groupby("Sexo").cov())
+    print(df.groupby("Sexo").corr())
 
 def histogram_column(df, column_name):
     plt.clf()
