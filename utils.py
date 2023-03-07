@@ -1,15 +1,11 @@
 from matplotlib import pyplot as plt
+import seaborn as sns
 def replace_missing_values(df, column, value, method="mean"):
     mean_df = df.copy()
     median_df = df.copy()
     df.drop(df[df[column] >= value].index, inplace=True) # drops the rows that have Alcohol >= value
     df_mean = df[column].mean()
     df_median = df[column].median()
-
-    # print("Removing rows with " + column +" >=", value,"...")
-    # print()
-    # print("Mean:", df_mean)
-    # print("Median:", df_median)
 
     # print()
     if (method == "mean"):
@@ -28,14 +24,6 @@ def replace_missing_values(df, column, value, method="mean"):
 def cov_analysis(df):
     print(df.groupby("Sexo").cov())
 
-def histogram_column(df, column_name):
-    plt.clf()
-    df.hist(column=column_name, grid=False, bins=3, range=(0,1))
-    plt.title("")
-    plt.xlabel("Sexo")
-    plt.ylabel("Cantidad")
-    plt.savefig("./out/"+column_name + "_histogram.png")
-
 def bar_column(df, column_name):
     plt.clf()
     y = df[column_name].value_counts()
@@ -43,6 +31,12 @@ def bar_column(df, column_name):
     plt.xlabel(column_name)
     plt.ylabel("Cantidad")
     plt.savefig("./out/"+column_name + "_bar.png")
+
+def kurtosis_column(df, column):
+    print("Kurtosis:", df[column].kurtosis())
+
+def skewness_column(df, column):
+    print("Skewness:", df[column].skew())
 
 
 def boxplot_column(df, column_name, method=""):
@@ -52,6 +46,15 @@ def boxplot_column(df, column_name, method=""):
     boxplot.yaxis.grid(True, linestyle='-', which='major', color='lightgrey', alpha=0.5)
     str = column_name + "_with_" + method if method != "" else column_name
     boxplot.figure.savefig("./out/"+str + "_boxplot.png")
+
+def boxplot_grouped_column(df, column_name, group_by):
+    plt.clf()
+    boxplot = sns.boxplot(x=group_by, y=column_name, data=df)
+    boxplot.set_ylabel(column_name)
+    
+    # boxplot.yaxis.grid(True, linestyle='-', which='major', color='lightgrey', alpha=0.5)
+    boxplot.figure.savefig("./out/"+column_name + "_by_" + group_by + "_boxplot.png")
+
 
 # Define a function to categorize the values based on the conditions
 def categorize(val):
