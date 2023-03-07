@@ -14,17 +14,15 @@ def replace_missing_values(df, column, value, method="mean"):
     # print()
     if (method == "mean"):
         # print("Replacing for mean...")
-        # mean_df.loc[mean_df[column] >= value, column] = df_mean
         mean_df[column].replace(value, df_mean, inplace=True)
-        # print("New " + column +" mean:", mean_df[column].mean())
-        # print("New " + column +" median:", mean_df[column].median())
+        print("New " + column +" mean:", mean_df[column].mean())
+        print("New " + column +" median:", mean_df[column].median())
         return mean_df
     elif (method == "median"):
         # print("Replacing for median...")
-        # median_df.loc[median_df[column] >= value, column] = df_median
         median_df[column].replace(value, df_median, inplace=True)
-        # print("New " + column +" mean:", median_df[column].mean())
-        # print("New " + column +" median:", median_df[column].median())
+        print("New " + column +" mean:", median_df[column].mean())
+        print("New " + column +" median:", median_df[column].median())
         return median_df
     
 def cov_analysis(df):
@@ -32,16 +30,26 @@ def cov_analysis(df):
 
 def histogram_column(df, column_name):
     plt.clf()
-    df.hist(column=column_name)
+    df.hist(column=column_name, grid=False, bins=3, range=(0,1))
+    plt.title("")
+    plt.xlabel("Sexo")
+    plt.ylabel("Cantidad")
     plt.savefig("./out/"+column_name + "_histogram.png")
+
+def bar_column(df, column_name):
+    plt.clf()
+    y = df[column_name].value_counts()
+    plt.bar(y.index, y)
+    plt.xlabel(column_name)
+    plt.ylabel("Cantidad")
+    plt.savefig("./out/"+column_name + "_bar.png")
 
 
 def boxplot_column(df, column_name, method=""):
     plt.clf()
     boxplot = df.boxplot(column=column_name, grid=False)
-    boxplot.set_title(column_name+ " boxplot")
-    # boxplot.set_xlabel("Variables")
-    boxplot.set_ylabel("Valor")
+    boxplot.set_ylabel("Cantidad")
+    boxplot.yaxis.grid(True, linestyle='-', which='major', color='lightgrey', alpha=0.5)
     str = column_name + "_with_" + method if method != "" else column_name
     boxplot.figure.savefig("./out/"+str + "_boxplot.png")
 
@@ -69,7 +77,6 @@ def scatter_category(df, x, y):
 
     scatter = df.plot.scatter(x, y)
 
-    scatter.set_title(x + " vs " + y)
     scatter.set_xlabel(x)
     scatter.set_ylabel("Calorías")
     scatter.figure.savefig("./out/"+x + "_vs_" + y + "_scatter.png")
